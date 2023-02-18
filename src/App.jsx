@@ -1,11 +1,66 @@
 import { Flex, Box, Center, FormControl, Input, FormLabel, HStack, RadioGroup, Radio, Button, } from "@chakra-ui/react";
-// import { Formik, Form, Field, ErrorMessage } from "formik";
-// import * as yup from "yup";
-
+import React, { useState, useEffect } from "react";
 
 function App() {
+  
+
+
+  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+  const [nasc, setNasc] = useState("");
+  const [ssn, setSsn] = useState("");
+  const [natural, setNatural] = useState("");
+  const [cellphone, setCellphone] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [genre, setGenre] = useState("");
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    const errors = {};
+    if (!fullname) {
+      errors.fullname = "Fullname is required";
+    }
+    if (!email) {
+      errors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      errors.email = "Email address is invalid";
+    }
+    if (!nasc) {
+      errors.nasc = "Birthdate is required";
+    }
+    if (!ssn) {
+      errors.ssn = "SSN is required";
+    } else if (!/^\d{3}-?\d{2}-?\d{4}$/.test(ssn)) {
+      errors.ssn = "Please enter a valid SSN (e.g. 123-45-6789)";
+    }
+    if (!natural) {
+      errors.natural = "Naturalness is required";
+    }
+    if (!cellphone) {
+      errors.cellphone = "Cellphone is required";
+    } else if (!/^(\+?\d{1,3}[- ]?)?\d{10}$/.test(cellphone)) {
+      errors.cellphone = "Please enter a valid cellphone number (10 digits)";
+    }
+    if (!address) {
+      errors.address = "Address is required";
+    }
+    if (!city) {
+      errors.city = "City is required";
+    }
+    if (!genre) {
+      errors.genre = "Genre is required";
+    }
+    setErrors(errors);
+  }, [fullname, email, nasc, ssn, natural, cellphone, address, city, genre]);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Do something with the form data
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <Box h="100vh">
         <Center
           as="header"
@@ -41,11 +96,14 @@ function App() {
                 <Box w="100%">
                   <FormLabel fontWeight="bold" htmlFor="fullname">Full Name</FormLabel>
                   <Input required
-                    type="fullname"
-                    placeholder="userName"
+                    type="text"
+                    placeholder="userFullname"
                     name="fullname"
+                    value={fullname}
+                    onChange={(event) => setFullname(event.target.value)}
                     id="fullname"
                   />
+                  {errors.fullname && <span style={{ color: "red" }}>{errors.fullname}</span>}
                 </Box>
                 {/* caixa de email */}
                 <Box w="100%">
@@ -55,27 +113,38 @@ function App() {
                     placeholder="email@email.com"
                     name="email"
                     id="email"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
                   />
+                  {errors.email && <span style={{ color: "red" }}>{errors.email}</span>}
                 </Box>
               </HStack>
               <HStack spacing="4">
                 {/* caixa de email */}
                 <Box w="100%>">
-                  <FormLabel fontWeight="bold" htmlFor="nasc">Birth Date</FormLabel>
+                  <FormLabel fontWeight="bold" htmlFor="nasc">Birthdate</FormLabel>
                   <Input required
                     id="nasc"
                     placeholder="nasc"
                     name="nasc"
-                    type="date" />
+                    type="date"
+                    value={nasc}
+                    onChange={(event) => setNasc(event.target.value)} 
+                  />
+                  {errors.nasc && <span style={{ color: "red" }}>{errors.nasc}</span>}
                 </Box>
                 <Box w="100%>">
                   <FormLabel fontWeight="bold" htmlFor="ssn">SSN</FormLabel>
                   <Input required
-                    minlength="10"
+                    minlength="9"
                     id="ssn"
                     placeholder="ssn"
                     name="ssn"
-                    type="text" />
+                    type="text" 
+                    value={ssn}
+                    onChange={(event) => setSsn(event.target.value)}
+                  />
+                  {errors.ssn && <span style={{ color: "red" }}>{errors.ssn}</span>}
                 </Box>
                 <Box w="100%">
                   <FormLabel fontWeight="bold" htmlFor="natural">Naturalness</FormLabel>
@@ -83,7 +152,11 @@ function App() {
                     placeholder="natural"
                     name="natural"
                     type="text"
-                    id="natural" />
+                    id="natural" 
+                    value={natural}
+                    onChange={(event) => setNatural(event.target.value)}
+                  />
+                  {errors.natural && <span style={{ color: "red" }}>{errors.natural}</span>}
                 </Box>
               </HStack>
               <HStack spacing="4">
@@ -93,13 +166,17 @@ function App() {
                     placeholder="cellphone"
                     name="cellphone"
                     id="cellphone"
-                    type="number" />
+                    type="number" 
+                    value={cellphone}
+                    onChange={(event) => setCellphone(event.target.value)}
+                  />
+                  {errors.cellphone && <span style={{ color: "red"}}>{errors.cellphone}</span>}
                 </Box>
               </HStack>
               <HStack spacing="4">
                 <Box w="100%">
-                  <FormLabel fontWeight="bold" htmlFor="phone">Phone</FormLabel>
-                  <Input required
+                  <FormLabel fontWeight="bold" htmlFor="phone">Phone (Optional)</FormLabel>
+                  <Input
                     id="phone"
                     placeholder="phone"
                     name="phone"
@@ -110,7 +187,11 @@ function App() {
                   <Input required
                     placeholder="address"
                     name="address"
-                    id="address" />
+                    id="address" 
+                    value={address}
+                    onChange={(event) => setAddress(event.target.value)}
+                  />
+                  {errors.address && <span style={{ color: "red"}}>{errors.address}</span>}
                 </Box>
               </HStack>
               <HStack spacing="4">
@@ -119,7 +200,11 @@ function App() {
                   <Input required
                     placeholder="city"
                     name="city"
-                    id="city" />
+                    id="city" 
+                    value={city}
+                    onChange={(event) => setCity(event.target.value)}
+                  />
+                  {errors.city && <span style={{ color: "red"}}>{errors.city}</span>}
                 </Box>
               </HStack>
               <HStack spacing="4">
@@ -127,10 +212,27 @@ function App() {
                   <FormLabel required fontWeight="bold">Genre</FormLabel>
                   <RadioGroup defaultValue="M">
                     <HStack spacing="24px">
-                      <Radio value="M">Man</Radio>
-                      <Radio value="F">Woman</Radio>
-                      <Radio value="Other">Other</Radio>
-                      <Radio value="Nothing">I don't want answer</Radio>
+                      <Radio 
+                      value="M"
+                      onChange={(event) => setGenre(event.target.value)}>
+                        Man
+                      </Radio>
+                      <Radio 
+                      value="F"
+                      onChange={(event) => setGenre(event.target.value)}>
+                        Woman
+                      </Radio>
+                      <Radio 
+                      value="Other"
+                      onChange={(event) => setGenre(event.target.value)}>
+                        Other
+                      </Radio>
+                      <Radio 
+                      value="Nothing"
+                      onChange={(event) => setGenre(event.target.value)}>
+                        I don't want answer
+                      </Radio>
+                      {errors.genre && <span style={{ color: "red"}}>{errors.genre}</span>}
                     </HStack>
                     <HStack justify="center">
                       <Button
